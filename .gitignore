@@ -43,6 +43,8 @@ pnpm-debug.log*
 
 coverage/
 
+setup/build/*
+
 # TypeScript build info
 *.tsbuildinfo
 
@@ -98,3 +100,4 @@ temp/
 
 *.patch
 *.diff
+
