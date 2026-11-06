@@ -6,6 +6,8 @@ import { deps } from "./info.ts";
 
 async function main() {
     try {
+        if (process.getuid?.() === 0)
+            throw new ProgramError("You cannot run this with root priviliges", true); 
         const { values, positionals } = parseArgs({
             args: process.argv.slice(2),
             options: {},
