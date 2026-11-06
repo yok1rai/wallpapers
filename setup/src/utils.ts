@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { access } from "node:fs/promises";
 import { ProgramError } from "./errors.ts"
 
 export function statusText(succeed: boolean, text: string, extra?: string, bold = false): string {
@@ -11,6 +12,15 @@ export function formattedText(header: string, bodies: string[]) {
     console.log(`\x1b[1m${header}:\x1b[0m`);
     for (const body of bodies) {
         console.log(body.padStart(body.length + 4, " ")); 
+    }
+}
+
+export async function exists(path: string): Promise<boolean> {
+    try {
+        await access(path);
+        return true;
+    } catch {
+        return false;
     }
 }
 
