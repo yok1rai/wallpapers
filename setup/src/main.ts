@@ -17,14 +17,9 @@ async function main() {
 
         const [command, ...args] = positionals;
 
-        if (command === undefined)
-            throw new ProgramError(
-                "No command given (run with `help` to see commands)",
-                true,
-            );
-
         switch (command) {
-            case "status": {
+            case "status":
+            case undefined: {
                 await statusPanel(deps);
                 break;
             }
