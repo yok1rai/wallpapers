@@ -5,7 +5,7 @@ import { createInterface } from "node:readline";
 import { stdin, stdout } from "node:process";
 import { argv } from "node:process";
 import { spawn } from "node:child_process";
-import {UserErr} from "../wallpaperd/errors";
+import {UserErr} from "../../wallpaperd/errors";
 
 
 const rl = createInterface(stdin, stdout); 

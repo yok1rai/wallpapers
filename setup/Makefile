@@ -7,12 +7,15 @@ SRC := src/main.ts
 SOURCES := $(wildcard src/*.ts)
 TARGET := build/$(NAME)
 
-# System installation paths
+# Installation paths
 PREFIX ?= /usr/local
-FISH_COMPLETIONS_DIR ?= /usr/share/fish/vendor_completions.d
+DESTDIR ?=
+BINDIR ?= $(PREFIX)/bin
+FISH_COMPLETIONS_DIR ?= $(PREFIX)/share/fish/vendor_completions.d
 
 # User installation paths
-USER_PREFIX := $(HOME)/.local
+USER_PREFIX ?= $(HOME)/.local
+USER_BINDIR := $(USER_PREFIX)/bin
 USER_FISH_DIR := $(HOME)/.config/fish/completions
 
 # Fish completion source
@@ -25,7 +28,7 @@ FISH_COMPLETION := completions/$(NAME).fish
         user-install user-uninstall clean rebuild
 
 # Default: Build and install for current user
-all: build user-install
+all: user-install
 
 # Build executable
 build: $(TARGET)
@@ -36,27 +39,27 @@ $(TARGET): $(SOURCES)
 
 # Run executable
 run: build
-	./$(TARGET)
+	./$(TARGET) $(ARGS)
 
-# System-wide installation (requires root)
+# System-wide installation
 install: build
-	install -Dm755 $(TARGET) $(DESTDIR)$(PREFIX)/bin/$(NAME)
+	install -Dm755 $(TARGET) $(DESTDIR)$(BINDIR)/$(NAME)
 	install -Dm644 $(FISH_COMPLETION) $(DESTDIR)$(FISH_COMPLETIONS_DIR)/$(NAME).fish
 
 # System-wide uninstallation
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/$(NAME)
+	rm -f $(DESTDIR)$(BINDIR)/$(NAME)
 	rm -f $(DESTDIR)$(FISH_COMPLETIONS_DIR)/$(NAME).fish
 
 # User installation
 user-install: build
-	install -Dm755 $(TARGET) $(USER_PREFIX)/bin/$(NAME)
+	install -Dm755 $(TARGET) $(USER_BINDIR)/$(NAME)
 	install -Dm644 $(FISH_COMPLETION) $(USER_FISH_DIR)/$(NAME).fish
-	@echo -e "\e[31mMake sure $(USER_PREFIX) is under the PATH\e[0m"
+	@printf '\033[33mEnsure %s is in your PATH\033[0m\n' "$(USER_BINDIR)"
 
 # User uninstallation
 user-uninstall:
-	rm -f $(USER_PREFIX)/bin/$(NAME)
+	rm -f $(USER_BINDIR)/$(NAME)
 	rm -f $(USER_FISH_DIR)/$(NAME).fish
 
 # Clean build artifacts

@@ -24,7 +24,18 @@ export async function exists(path: string): Promise<boolean> {
     }
 }
 
-export async function doesExist(program: string): Promise<boolean> {
+export function commandExists(command: string): Promise<boolean> {
+    return new Promise((resolve) => {
+        const child = spawn("which", [command], {
+            stdio: "ignore"
+        });
+
+        child.on("error", () => resolve(false));
+        child.on("close", (code) => resolve(code === 0));
+    });
+}
+
+export async function isRunning(program: string): Promise<boolean> {
     return new Promise((res, rej) => {
         const child = spawn("pgrep", ["-x", program], {
             stdio: "ignore",

@@ -1,4 +1,4 @@
-import { statusText, formattedText, doesExist, exists } from "./utils.js";
+import { statusText, formattedText, isRunning, exists } from "./utils.js";
 import { name, version, developers, OSes } from "./info.js";
 import { platform } from "node:os";
 import { ProgramError } from "./errors.js";
@@ -8,7 +8,7 @@ async function checkExist(apps: string[]): Promise<Record<string, boolean>> {
     const record: Record<string, boolean> = {};
 
     for (const app of apps) {
-        record[app] = await doesExist(app);
+        record[app] = await isRunning(app);
     }
 
     return record;
